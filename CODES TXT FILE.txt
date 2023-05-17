@@ -1,0 +1,665 @@
+CAMEL BANANA
+
+
+total = int(input("Enter the no. of bananas: "))
+distance = int(input("Enter the distance you want to cover: "))
+load_capacity = int(input("Enter the max Load capacity of your camel: "))
+lose=0
+start = total
+for i in range(distance):
+    while start>0:
+        start = start-load_capacity
+        
+        if start==1:
+            lose = lose-1
+        lose = lose+2
+    lose = lose - 1
+    start=total-lose
+    if start==0:
+      break
+print(start)
+
+__________________________________________________________________________
+
+
+AGENT BASED PROGRAM VECTOR COLORING
+
+
+G = [[ 0, 1, 1, 0, 1, 0],
+     [ 1, 0, 1, 1, 0, 1],
+     [ 1, 1, 0, 1, 1, 0],
+     [ 0, 1, 1, 0, 0, 1],
+     [ 1, 0, 1, 0, 0, 1],
+     [ 0, 1, 0, 1, 1, 0]]
+
+# inisiate the name of node.
+node = "abcdef"
+t_={}
+for i in range(len(G)):
+  t_[node[i]] = i
+
+# count degree of all node.
+degree =[]
+for i in range(len(G)):
+  degree.append(sum(G[i]))
+
+# inisiate the posible color
+colorDict = {}
+for i in range(len(G)):
+  colorDict[node[i]]=["Blue","Red","Yellow","Green"]
+
+
+# sort the node depends on the degree
+sortedNode=[]
+indeks = []
+
+# use selection sort
+for i in range(len(degree)):
+  _max = 0
+  j = 0
+  for j in range(len(degree)):
+    if j not in indeks:
+      if degree[j] > _max:
+        _max = degree[j]
+        idx = j
+  indeks.append(idx)
+  sortedNode.append(node[idx])
+
+# The main process
+theSolution={}
+for n in sortedNode:
+  setTheColor = colorDict[n]
+  theSolution[n] = setTheColor[0]
+  adjacentNode = G[t_[n]]
+  for j in range(len(adjacentNode)):
+    if adjacentNode[j]==1 and (setTheColor[0] in colorDict[node[j]]):
+      colorDict[node[j]].remove(setTheColor[0])
+
+
+# Print the solution
+for t,w in sorted(theSolution.items()):
+  print("Node",t," = ",w)
+
+
+__________________________________________________________________________
+
+
+CRYPT ARITHMETIC PROBLEM
+
+def solutions():
+ # letters = ('s', 'e', 'n', 'd', 'm', 'o', 'r', 'y')
+ all_solutions = list()
+ for s in range(9, -1, -1):
+   for e in range(9, -1, -1):
+     for n in range(9, -1, -1):
+        for d in range(9, -1, -1):
+          for m in range(9, 0, -1):
+            for o in range(9, -1, -1):
+              for r in range(9, -1, -1):
+                for y in range(9, -1, -1):
+                  if len(set([s, e, n, d, m, o, r, y])) == 8:
+                    send = 1000 * s + 100 * e + 10 * n + d
+                    more = 1000 * m + 100 * o + 10 * r + e
+                    money = 10000 * m + 1000 * o + 100 * n + 10 * e + y
+                    if send + more == money:
+                      all_solutions.append((send, more, money))
+                      return all_solutions
+print(solutions())
+
+__________________________________________________________________________
+
+
+BREADTH FIRST SEARCH_DEPTH FIRST SEARCH
+BFS_DFS
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+
+visited_bfs = []
+queue = []
+
+
+def bfs(visited_bfs, graph, node):
+  visited_bfs.append(node)
+  queue.append(node)
+
+  while queue:
+    s = queue.pop(0)
+    print(s, end=" ")
+
+    for neighbour in graph[s]:
+      if neighbour not in visited_bfs:
+        visited_bfs.append(neighbour)
+        queue.append(neighbour)
+
+
+visited = set()
+
+
+def dfs(visited, graph, node):
+    if node not in visited:
+        print(node, end=" ")
+        visited.add(node)
+        for neighbour in graph[node]:
+            dfs(visited, graph, neighbour)
+
+
+print("BFS:", end=" ")
+bfs(visited_bfs, graph, 'A')
+print('\n')
+print("DFS:", end=" ")
+dfs(visited, graph, 'A')
+
+__________________________________________________________________________
+
+
+BEST FIRST SEARCH A*
+
+
+from queue import PriorityQueue
+
+class Graph:
+    def __init__(self, adjacency_list):
+        self.adjacency_list = adjacency_list
+
+    def get_neighbors(self, v):
+        return self.adjacency_list[v]
+
+    def h(self, n):
+        H = {
+            'A': 1,
+            'B': 1,
+            'C': 1,
+            'D': 1
+        }
+
+        return H[n]
+
+    def best_first_search(self, start, goal):
+        explored = []
+        pq = PriorityQueue()
+        pq.put((0, start))
+        parents = {start: None}
+
+        while not pq.empty():
+            current = pq.get()[1]
+
+            if current == goal:
+                path = []
+                while current is not None:
+                    path.append(current)
+                    current = parents[current]
+                path.reverse()
+                print(f"Best-First Search path: {path}")
+                return path
+
+            explored.append(current)
+
+            for neighbor, weight in self.get_neighbors(current):
+                if neighbor not in explored and neighbor not in [i[1] for i in pq.queue]:
+                    parents[neighbor] = current
+                    pq.put((self.h(neighbor), neighbor))
+
+        print("Path not found!")
+        return None
+
+    def a_star_algorithm(self, start_node, stop_node):
+        open_list = set([start_node])
+        closed_list = set([])
+        g = {}
+
+        g[start_node] = 0
+        parents = {}
+        parents[start_node] = start_node
+
+        while len(open_list) > 0:
+            n = None
+            for v in open_list:
+                if n == None or g[v] + self.h(v) < g[n] + self.h(n):
+                    n = v
+
+            if n == None:
+                print('Path does not exist!')
+                return None
+            if n == stop_node:
+                reconst_path = []
+
+                while parents[n] != n:
+                    reconst_path.append(n)
+                    n = parents[n]
+
+                reconst_path.append(start_node)
+
+                reconst_path.reverse()
+
+                print('A* path: {}'.format(reconst_path))
+                return reconst_path
+
+            for (m, weight) in self.get_neighbors(n):
+                if m not in open_list and m not in closed_list:
+                    open_list.add(m)
+                    parents[m] = n
+                    g[m] = g[n] + weight
+                else:
+                    if g[m] > g[n] + weight:
+                        g[m] = g[n] + weight
+                        parents[m] = n
+
+                        if m in closed_list:
+                            closed_list.remove(m)
+                            open_list.add(m)
+            open_list.remove(n)
+            closed_list.add(n)
+
+        print('Path does not exist!')
+        return None
+
+
+adjacency_list = {
+    'A': [('B', 1), ('C', 3), ('D', 7)],
+    'B': [('D', 5)],
+    'C': [('D', 12)]
+}
+graph1 = Graph(adjacency_list)
+graph1.best_first_search('A', 'D')
+graph1.a_star_algorithm('A', 'D')
+
+
+__________________________________________________________________________
+
+
+MIN MAX ALGORITHM FOR TIC TAC TOE
+
+
+player, opponent = 'x', 'o'
+def isMovesLeft(board) :
+	for i in range(3) :
+		for j in range(3) :
+			if (board[i][j] == '_') :
+				return True
+	return False
+def evaluate(b) :
+	for row in range(3) :	
+		if (b[row][0] == b[row][1] and b[row][1] == b[row][2]) :		
+			if (b[row][0] == player) :
+				return 10
+			elif (b[row][0] == opponent) :
+				return -10
+	for col in range(3) :
+		if (b[0][col] == b[1][col] and b[1][col] == b[2][col]) :
+			if (b[0][col] == player) :
+				return 10
+			elif (b[0][col] == opponent) :
+				return -10
+	if (b[0][0] == b[1][1] and b[1][1] == b[2][2]) :
+		if (b[0][0] == player) :
+			return 10
+		elif (b[0][0] == opponent) :
+			return -10
+	if (b[0][2] == b[1][1] and b[1][1] == b[2][0]) :	
+		if (b[0][2] == player) :
+			return 10
+		elif (b[0][2] == opponent) :
+			return -10
+	return 0
+def minimax(board, depth, isMax) :
+	score = evaluate(board)
+	if (score == 10) :
+		return score
+	if (score == -10) :
+		return score
+	if (isMovesLeft(board) == False) :
+		return 0
+	if (isMax) :	
+		best = -1000
+		for i in range(3) :		
+			for j in range(3) :
+				if (board[i][j]=='_') :
+					board[i][j] = player
+					best = max( best, minimax(board,
+											depth + 1,
+											not isMax) )
+					board[i][j] = '_'
+		return best
+	else :
+		best = 1000
+		for i in range(3) :		
+			for j in range(3) :
+				if (board[i][j] == '_') :
+					board[i][j] = opponent
+					best = min(best, minimax(board, depth + 1, not isMax))
+					board[i][j] = '_'
+		return best
+def findBestMove(board) :
+	bestVal = -1000
+	bestMove = (-1, -1)
+	for i in range(3) :	
+		for j in range(3) :
+			if (board[i][j] == '_') :
+				board[i][j] = player
+				moveVal = minimax(board, 0, False)
+				board[i][j] = '_'
+				if (moveVal > bestVal) :				
+					bestMove = (i, j)
+					bestVal = moveVal
+	print("The value of the best Move is :", bestVal)
+	print()
+	return bestMove
+board = [
+	[ 'x', 'o', 'x' ],
+	[ 'o', 'o', 'x' ],
+	[ '_', '_', '_' ]
+]
+bestMove = findBestMove(board)
+print("The Optimal Move is :")
+print("ROW:", bestMove[0], " COL:", bestMove[1])
+
+
+__________________________________________________________________________
+
+
+UNIFICATION AND RESOLUTION
+
+
+def get_index_comma(string):
+    index_list = list()
+    par_count = 0
+
+    for i in range(len(string)):
+        if string[i] == ',' and par_count == 0:
+            index_list.append(i)
+        elif string[i] == '(':
+            par_count += 1
+        elif string[i] == ')':
+            par_count -= 1
+
+    return index_list
+
+
+def is_variable(expr):
+    for i in expr:
+        if i == '(' or i == ')':
+            return False
+
+    return True
+
+
+def process_expression(expr):
+    expr = expr.replace(' ', '')
+    index = None
+    for i in range(len(expr)):
+        if expr[i] == '(':
+            index = i
+            break
+    predicate_symbol = expr[:index]
+    expr = expr.replace(predicate_symbol, '')
+    expr = expr[1:len(expr) - 1]
+    arg_list = list()
+    indices = get_index_comma(expr)
+
+    if len(indices) == 0:
+        arg_list.append(expr)
+    else:
+        arg_list.append(expr[:indices[0]])
+        for i, j in zip(indices, indices[1:]):
+            arg_list.append(expr[i + 1:j])
+        arg_list.append(expr[indices[len(indices) - 1] + 1:])
+
+    return predicate_symbol, arg_list
+
+
+def get_arg_list(expr):
+    _, arg_list = process_expression(expr)
+
+    flag = True
+    while flag:
+        flag = False
+
+        for i in arg_list:
+            if not is_variable(i):
+                flag = True
+                _, tmp = process_expression(i)
+                for j in tmp:
+                    if j not in arg_list:
+                        arg_list.append(j)
+                arg_list.remove(i)
+
+    return arg_list
+
+
+def check_occurs(var, expr):
+    arg_list = get_arg_list(expr)
+    if var in arg_list:
+        return True
+
+    return False
+
+
+def unify(expr1, expr2):
+
+    if is_variable(expr1) and is_variable(expr2):
+        if expr1 == expr2:
+            return 'Null'
+        else:
+            return False
+    elif is_variable(expr1) and not is_variable(expr2):
+        if check_occurs(expr1, expr2):
+            return False
+        else:
+            tmp = str(expr2) + '/' + str(expr1)
+            return tmp
+    elif not is_variable(expr1) and is_variable(expr2):
+        if check_occurs(expr2, expr1):
+            return False
+        else:
+            tmp = str(expr1) + '/' + str(expr2)
+            return tmp
+    else:
+        predicate_symbol_1, arg_list_1 = process_expression(expr1)
+        predicate_symbol_2, arg_list_2 = process_expression(expr2)
+
+        # Step 2
+        if predicate_symbol_1 != predicate_symbol_2:
+            return False
+        # Step 3
+        elif len(arg_list_1) != len(arg_list_2):
+            return False
+        else:
+            # Step 4: Create substitution list
+            sub_list = list()
+
+            # Step 5:
+            for i in range(len(arg_list_1)):
+                tmp = unify(arg_list_1[i], arg_list_2[i])
+
+                if not tmp:
+                    return False
+                elif tmp == 'Null':
+                    pass
+                else:
+                    if type(tmp) == list:
+                        for j in tmp:
+                            sub_list.append(j)
+                    else:
+                        sub_list.append(tmp)
+
+            # Step 6
+            return sub_list
+
+
+if __name__ == '__main__':
+
+    f1 = 'Q(a, g(x, a), f(y))'
+    f2 = 'Q(a, g(f(b), a), x)'
+    # f1 = input('f1 : ')
+    # f2 = input('f2 : ')
+
+    result = unify(f1, f2)
+    if not result:
+        print('The process of Unification failed!')
+    else:
+        print('The process of Unification successful!')
+        print(result)
+
+
+__________________________________________________________________________
+
+
+LOGISTIC REGRESSION
+
+#Logistic Regression
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
+# Load the breast cancer dataset
+cancer = load_breast_cancer()
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+    cancer.data, cancer.target, test_size=0.2, random_state=42)
+
+# Create a logistic regression model
+lr_model = LogisticRegression()
+
+# Train the model on the training data
+lr_model.fit(X_train, y_train)
+
+# Predict the target values for the test data
+y_pred = lr_model.predict(X_test)
+
+# Calculate the accuracy of the model
+accuracy = lr_model.score(X_test, y_test)
+
+# Print the accuracy as a percentage
+print("Logistic Regression Accuracy: {:.2f}%".format(accuracy*100))
+
+#Naive Bayes
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+
+# Load the breast cancer dataset
+cancer = load_breast_cancer()
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+    cancer.data, cancer.target, test_size=0.2, random_state=42)
+
+# Create a Naive Bayes model
+nb_model = GaussianNB()
+
+# Train the model on the training data
+nb_model.fit(X_train, y_train)
+
+# Predict the target values for the test data
+y_pred = nb_model.predict(X_test)
+
+# Calculate the accuracy of the model
+accuracy = nb_model.score(X_test, y_test)
+
+# Print the accuracy as a percentage
+print("Naive Bayes Accuracy: {:.2f}%".format(accuracy*100))
+
+#SVM
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+
+# Load the breast cancer dataset
+cancer = load_breast_cancer()
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+    cancer.data, cancer.target, test_size=0.2, random_state=42)
+
+# Create an SVM model
+svm_model = SVC(kernel='linear')
+
+# Train the model on the training data
+svm_model.fit(X_train, y_train)
+
+# Predict the target values for the test data
+y_pred = svm_model.predict(X_test)
+
+# Calculate the accuracy of the model
+accuracy = svm_model.score(X_test, y_test)
+
+# Print the accuracy as a percentage
+print("SVM Accuracy: {:.2f}%".format(accuracy*100))
+
+
+__________________________________________________________________________
+
+
+NLP
+
+
+import nltk
+nltk.download('vader_lexicon')
+
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+# Initialize the sentiment analyzer
+sia = SentimentIntensityAnalyzer()
+
+# Sample text for analysis
+text = "I really enjoyed this movie. The acting was great and the plot was engaging."
+
+# Calculate the sentiment score for the text
+score = sia.polarity_scores(text)
+
+# Print the sentiment score
+print("negative = ", score["neg"])
+print("neutral = ", score["neu"])
+print("positive = ", score["pos"])
+print("compound = ", score["compound"])
+
+
+__________________________________________________________________________
+
+
+KERAS OPENCV
+
+
+import tensorflow as tf
+from tensorflow import keras
+
+# Load the CIFAR-10 dataset
+(x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
+
+# Normalize pixel values between 0 and 1
+x_train = x_train.astype('float32') / 255
+x_test = x_test.astype('float32') / 255
+
+# Define the CNN architecture
+model = keras.Sequential([
+    keras.layers.Conv2D(32, (3, 3), padding='same',
+                        activation='relu', input_shape=x_train.shape[1:]),
+    keras.layers.MaxPooling2D((2, 2)),
+    keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu'),
+    keras.layers.MaxPooling2D((2, 2)),
+    keras.layers.Flatten(),
+    keras.layers.Dense(64, activation='relu'),
+    keras.layers.Dense(10)
+])
+
+# Compile the model
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(
+                  from_logits=True),
+              metrics=['accuracy'])
+
+# Train the model on the training data
+model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
+
+# Evaluate the model on the test data
+test_loss, test_acc = model.evaluate(x_test, y_test)
+print(f'Test accuracy: {test_acc}')
+
