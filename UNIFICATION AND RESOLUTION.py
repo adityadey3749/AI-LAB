@@ -1,4 +1,4 @@
-def get_index_comma(string):
+def get_index_comma(string)
     index_list = list()
     par_count = 0
 
